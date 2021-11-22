@@ -60,11 +60,22 @@ int string_search(char *str, char charToSearch){
 	return -1;
 }
 
+// returns an integer from a number inside a string
+int string_to_int(char str[]) {
+	int i = 0, sum = 0;
+	while(str[i] != 0){
+		if(str[i] >= 48 || str[i] <= 57) {
+			sum = sum * 10 + (str[i] - 48);
+			i++;
+		} else return 0;
+	}
+	return sum;
+}
 
 // in case an A-instruction is read, this set of instruction will be executed.
 char* a_instruction(char* str, char* ret) {
 	str[0] = '0';
-	int val = atoi(str);
+	int val = string_to_int(str);
 	int_to_bin(ret, val);
 	ret[16] = 0;
 	return ret;
