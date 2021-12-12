@@ -1,5 +1,6 @@
 *.out
 *.asm
 *.hack
+*.o
 asm_dir
 .vscode

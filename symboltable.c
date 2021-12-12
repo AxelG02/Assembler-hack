@@ -1,4 +1,4 @@
-#include "symbol.h"
+#include "symboltable.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,15 +9,11 @@ symboltable PREDEFINED[23] = {
 	"SCREEN", 16384, "KBD", 24576
 };
 
-char* dont_lose_my_string(const char *src) {
-	char *dst = malloc(strlen (src) + 1); 	 	// alloca spazio per la stringa
-	if (dst == NULL){							// non c'è memoria per la destinazione?
-		return NULL;
+void push_predefined(listsymbol **head) {
+	for (int i=0; i<23; i++) {
+		push_to_list(head, PREDEFINED[i].label, PREDEFINED[i].address);
 	}
-	strcpy(dst, src);                     		// copia la stringa
-	return dst;                            		// ritorna la nuova stringa
 }
-
 
 void push_to_list(listsymbol **head, char* label, int address) {
 	
@@ -26,15 +22,19 @@ void push_to_list(listsymbol **head, char* label, int address) {
 		current = current->next;
 	}
 	current->next = (listsymbol*)malloc(sizeof(listsymbol));
-	current->next->label = dont_lose_my_string(label);
+	current->next->label = string_alloc(label);
 	current->next->address = address;
 	current->next->next = NULL;
 }
 
-void push_predefined(listsymbol **head) {
-	for (int i=0; i<23; i++) {
-		push_to_list(head, PREDEFINED[i].label, PREDEFINED[i].address);
+// saves the string in memory. Used to solve a bug
+char* string_alloc(const char *src) {
+	char *dst = malloc(strlen (src) + 1);
+	if (dst == NULL){
+		return NULL;
 	}
+	strcpy(dst, src);
+	return dst;
 }
 
 // check if the label is already in the list and return the address
